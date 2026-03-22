@@ -4,66 +4,59 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a GitHub template repository for a modern web application stack combining:
-- **Vite** - Build tool and dev server
-- **React** - Frontend framework with TypeScript
-- **Firebase** - Backend services (Authentication, Firestore, Hosting)
-- **Playwright** - End-to-end testing framework
+**Intelligent Tenant Engagement & Assistant** — a pilot system for CPN (Central Pattana) enabling:
+- **Component A**: Customer-facing AI chatbot (24/7 inbound lead capture)
+- **Component B**: Internal AI assistant for call centre / leasing staff (unit recommendations, lead scoring)
+- **Admin Panel**: Knowledge base management, unit availability
 
-## Common Development Commands
+Three-tier architecture: React/TypeScript frontend → Python/FastAPI backend (Cloud Run) → Firebase (Auth, Firestore, Storage) + Pinecone vector DB + OpenAI GPT-4o.
 
-Since this is a template repository, the actual project structure and scripts will depend on how it's initialized. When the project is set up, typical commands will include:
+## Development Commands
 
 ```bash
-# Development
-npm run dev          # Start Vite dev server
-npm run build        # Build for production
-npm run preview      # Preview production build
-
-# Testing
-npm run test         # Run unit tests
-npm run test:e2e     # Run Playwright tests
-npm run test:ui      # Run Playwright tests with UI
-
-# Linting and Type Checking
+npm run dev          # Start Vite dev server on port 3000
+npm run build        # Vite build + TypeScript compile
+npm run test         # Run Vitest unit tests
 npm run lint         # ESLint
-npm run typecheck    # TypeScript type checking
-
-# Firebase
-npm run deploy       # Deploy to Firebase
+npm run check        # Prettier write + ESLint fix (formats and lints)
 ```
 
-## Architecture Notes
+To run a single test file:
+```bash
+npx vitest run src/path/to/file.test.tsx
+```
 
-This template is designed for:
+## Architecture
 
-1. **Frontend**: React SPA with TypeScript, built with Vite
-2. **Backend**: Firebase services (Auth, Firestore, Functions if needed)
-3. **Testing**: Playwright for E2E tests, likely Jest/Vitest for unit tests
-4. **Build**: Vite for fast development and optimized production builds
+### Frontend (`src/`)
 
-## Firebase Integration
+- **Router**: Code-based TanStack Router. Routes are defined in `src/main.tsx` — add new routes with `createRoute` and register them in the `routeTree`. The root layout (Header + Outlet) is in the `rootRoute`.
+- **Forms**: TanStack Form + Zod for validation. Form context pattern shown in `src/hooks/`.
+- **UI**: shadcn/ui (Radix UI primitives + Tailwind CSS v4). Components live in `src/components/ui/`. Add new components via:
+  ```bash
+  pnpx shadcn@latest add <component-name>
+  ```
+- **Path alias**: `@` resolves to `./src` (configured in `vite.config.ts`).
+- **Styling**: Tailwind CSS v4 (via `@tailwindcss/vite` plugin — no `tailwind.config.js` needed).
+- **Tests**: Vitest with jsdom environment. Test files use `*.test.tsx` naming.
 
-Based on the .gitignore, this project uses Firebase with:
-- Firebase Hosting for deployment
-- Firebase Functions (optional)
-- Firebase Emulators for local development
-- Environment-based configuration
+### Demo Files
 
-Key Firebase files to expect:
-- `firebase.json` - Firebase project configuration
-- `.firebaserc` - Firebase project aliases
-- `src/lib/firebase.ts` - Firebase SDK initialization
+Files and directories prefixed with `demo` (e.g., `demo.form.simple.tsx`, `demo.form-context.ts`) are starter examples and can be safely deleted.
 
-## Development Environment
+### Backend (planned — not yet in repo)
 
-- Use Node.js with npm for package management
-- TypeScript for type safety
-- ESLint and Prettier for code formatting
-- Playwright for comprehensive E2E testing
+Per `design-document.md`: Python 3.12 + FastAPI + LangChain 0.3, deployed on Cloud Run.
 
-## Testing Strategy
+Key API endpoints:
+- `POST /api/v1/chat/{sessionId}/message` — RAG chat (SSE streaming response)
+- `POST /api/v1/recommend` — merchant profile → unit recommendations
 
-- Unit tests for components and utilities
-- E2E tests with Playwright covering user workflows
-- Firebase emulators for testing backend integration locally
+RAG pipeline: embed query → Pinecone similarity search (k=5) → GPT-4o with CPN knowledge base context.
+
+### Firebase
+
+- Firebase Auth: anonymous sessions for chatbot, Google SSO for internal staff (custom claims: `role=agent|sales|admin`)
+- Firestore: malls, units, leads, conversation history
+- Firebase Storage: knowledge base documents
+- FCM: lead alerts to sales reps
