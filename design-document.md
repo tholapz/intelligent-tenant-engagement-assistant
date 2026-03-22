@@ -55,6 +55,8 @@ The pilot uses a three-tier architecture: a React/TypeScript frontend hosted on 
 |                   |                                       |                                              |                            |
 |                   | RAG orchestration                     | OpenAI API (GPT-4o + text-embedding-3-small) |                            |
 |                   |                                       |                                              |                            |
+|                   | LLM provider abstraction              | aisuite (github.com/andrewyng/aisuite)       |                            |
+|                   |                                       |                                              |                            |
 |                   | Lead scoring engine                   | Pydantic v2                                  |                            |
 +-------------------+---------------------------------------+----------------------------------------------+----------------------------+
 | **Data & Auth**   | Structured data (malls, units, leads) | Firestore (NoSQL)                            | Firebase / GCP             |
@@ -147,11 +149,13 @@ The pilot uses a three-tier architecture: a React/TypeScript frontend hosted on 
 
   **pydantic**           2.7                Request / response validation
 
+  **aisuite**            latest             Unified LLM provider abstraction (OpenAI, Anthropic, etc.); model strings use "provider:model" format (e.g. "openai:gpt-4o")
+
   **langchain**          0.3                RAG orchestration, prompt management
 
   **langchain-openai**   0.1                OpenAI LLM + embedding integration
 
-  **openai**             1.30               Direct API calls (streaming)
+  **openai**             1.30               Direct API calls (streaming, embeddings)
 
   **pinecone-client**    4.1                Vector store (upsert + query)
 
