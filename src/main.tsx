@@ -10,6 +10,7 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import FormSimpleDemo from './routes/demo.form.simple.tsx'
 import FormAddressDemo from './routes/demo.form.address.tsx'
+import ChatRoute from './routes/chat.tsx'
 
 import Header from './components/Header'
 
@@ -36,6 +37,7 @@ const indexRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  ChatRoute(rootRoute),
   FormSimpleDemo(rootRoute),
   FormAddressDemo(rootRoute),
 ])
