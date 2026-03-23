@@ -15,6 +15,10 @@ export default function Header() {
         <div className="px-2 font-bold">
           <Link to="/demo/form/address">Address Form</Link>
         </div>
+
+        <div className="px-2 font-bold">
+          <Link to="/admin">Admin</Link>
+        </div>
       </nav>
     </header>
   )
