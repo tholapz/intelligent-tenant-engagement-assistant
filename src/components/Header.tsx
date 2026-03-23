@@ -9,6 +9,10 @@ export default function Header() {
         </div>
 
         <div className="px-2 font-bold">
+          <Link to="/chat">Chatbot</Link>
+        </div>
+
+        <div className="px-2 font-bold">
           <Link to="/demo/form/simple">Simple Form</Link>
         </div>
 
