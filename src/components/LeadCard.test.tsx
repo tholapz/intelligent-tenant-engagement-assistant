@@ -1,6 +1,7 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { LeadCard } from './LeadCard'
+import type { Timestamp } from 'firebase/firestore'
 import type { Lead } from '@/types'
 
 const mockNavigate = vi.fn()
@@ -10,7 +11,9 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 function makeTimestamp(date = new Date()) {
-  return { toDate: () => date } as unknown as import('firebase/firestore').Timestamp
+  return {
+    toDate: () => date,
+  } as unknown as Timestamp
 }
 
 const baseLead: Lead = {
@@ -52,12 +55,16 @@ describe('LeadCard', () => {
   // US-008 AC-G: leads with score ≥75 highlighted with badge
   it('shows High Priority badge when lead score is exactly 75', () => {
     render(<LeadCard lead={{ ...baseLead, leadScore: 75 }} />)
-    expect(screen.getAllByText('⭐ High Priority').length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText('⭐ High Priority').length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('shows High Priority badge when lead score is above 75', () => {
     render(<LeadCard lead={{ ...baseLead, leadScore: 92 }} />)
-    expect(screen.getAllByText('⭐ High Priority').length).toBeGreaterThanOrEqual(1)
+    expect(
+      screen.getAllByText('⭐ High Priority').length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
   it('does NOT show High Priority badge when lead score is below 75', () => {
@@ -80,7 +87,9 @@ describe('LeadCard', () => {
   // US-008 AC-F: time since creation displayed
   it('renders relative time since creation', () => {
     const oldDate = new Date(Date.now() - 3 * 60 * 60 * 1000) // 3 hours ago
-    render(<LeadCard lead={{ ...baseLead, createdAt: makeTimestamp(oldDate) }} />)
+    render(
+      <LeadCard lead={{ ...baseLead, createdAt: makeTimestamp(oldDate) }} />,
+    )
     // dayjs fromNow produces something like "3 hours ago"
     expect(screen.getByText(/ago/i)).toBeDefined()
   })

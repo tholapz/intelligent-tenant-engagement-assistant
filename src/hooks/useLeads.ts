@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react'
 import {
-  
-  
-  
   collection,
   getDocs,
   limit,
@@ -10,9 +7,13 @@ import {
   orderBy,
   query,
   startAfter,
-  where
+  where,
 } from 'firebase/firestore'
-import type {DocumentData, QueryConstraint, QueryDocumentSnapshot} from 'firebase/firestore';
+import type {
+  DocumentData,
+  QueryConstraint,
+  QueryDocumentSnapshot,
+} from 'firebase/firestore'
 import type { Lead, LeadFilters } from '@/types'
 import { db } from '@/lib/firebase'
 

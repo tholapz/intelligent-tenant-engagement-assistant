@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getToken, onMessage } from 'firebase/messaging'
 import { doc, setDoc } from 'firebase/firestore'
-import { db, getMessagingInstance  } from '@/lib/firebase'
+import { db, getMessagingInstance } from '@/lib/firebase'
 
 const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY as string | undefined
 
@@ -43,13 +43,13 @@ export function useFCM(uid: string | null) {
     }
   }, [uid])
 
-  const requestPermission = async (uid: string) => {
+  const requestPermission = async (targetUid: string) => {
     const result = await Notification.requestPermission()
     setPermission(result)
     if (result === 'granted') {
       const messaging = await getMessagingInstance()
       if (messaging) {
-        await registerToken(messaging, uid)
+        await registerToken(messaging, targetUid)
       }
     }
     return result

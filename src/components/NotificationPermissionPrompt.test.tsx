@@ -1,5 +1,5 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { NotificationPermissionPrompt } from './NotificationPermissionPrompt'
 
 const mockRequestPermission = vi.fn()
@@ -22,11 +22,13 @@ describe('NotificationPermissionPrompt', () => {
   it('renders the prompt when permission is "default"', () => {
     render(<NotificationPermissionPrompt uid="user-123" />)
     expect(screen.getByText('Enable push notifications')).toBeDefined()
-    expect(screen.getByRole('button', { name: 'Allow Notifications' })).toBeDefined()
+    expect(
+      screen.getByRole('button', { name: 'Allow Notifications' }),
+    ).toBeDefined()
     expect(screen.getByRole('button', { name: 'Not now' })).toBeDefined()
   })
 
-  it('calls requestPermission with uid when "Allow Notifications" is clicked', async () => {
+  it('calls requestPermission with uid when "Allow Notifications" is clicked', () => {
     mockRequestPermission.mockResolvedValueOnce('granted')
     render(<NotificationPermissionPrompt uid="user-123" />)
     fireEvent.click(screen.getByRole('button', { name: 'Allow Notifications' }))

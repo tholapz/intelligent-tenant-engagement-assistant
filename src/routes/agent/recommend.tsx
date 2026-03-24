@@ -16,9 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { API_BASE_URL, auth  } from '@/lib/firebase'
+import { API_BASE_URL, auth } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
-
 
 const BUSINESS_TYPES = [
   'Food & Beverage',

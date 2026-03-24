@@ -24,7 +24,6 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
-
 const STATUS_TRANSITIONS: Record<LeadStatus, Array<LeadStatus>> = {
   new: ['contacted'],
   contacted: ['site_visit_scheduled', 'closed_lost'],
@@ -83,7 +82,7 @@ function LeadDetailView() {
     lead.status !== 'closed_lost' &&
     (lead.assignedTo === user?.uid || role === 'admin')
 
-  const availableTransitions = STATUS_TRANSITIONS[lead.status] ?? []
+  const availableTransitions = STATUS_TRANSITIONS[lead.status]
 
   const handleStatusChange = async (newStatus: string) => {
     if (!user || !userProfile) return
@@ -211,18 +210,16 @@ function LeadDetailView() {
                           )}
                         >
                           <ReactMarkdown>{turn.content}</ReactMarkdown>
-                          {turn.timestamp?.toDate && (
-                            <p
-                              className={cn(
-                                'text-xs mt-1',
-                                turn.role === 'user'
-                                  ? 'text-blue-200'
-                                  : 'text-gray-400',
-                              )}
-                            >
-                              {dayjs(turn.timestamp.toDate()).format('HH:mm')}
-                            </p>
-                          )}
+                          <p
+                            className={cn(
+                              'text-xs mt-1',
+                              turn.role === 'user'
+                                ? 'text-blue-200'
+                                : 'text-gray-400',
+                            )}
+                          >
+                            {dayjs(turn.timestamp.toDate()).format('HH:mm')}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -255,13 +252,11 @@ function LeadDetailView() {
                               "{log.note}"
                             </p>
                           )}
-                          {log.timestamp?.toDate && (
-                            <p className="text-gray-400 text-xs mt-0.5">
-                              {dayjs(log.timestamp.toDate()).format(
-                                'MMM D, YYYY HH:mm',
-                              )}
-                            </p>
-                          )}
+                          <p className="text-gray-400 text-xs mt-0.5">
+                            {dayjs(log.timestamp.toDate()).format(
+                              'MMM D, YYYY HH:mm',
+                            )}
+                          </p>
                         </div>
                       </div>
                     ))
@@ -311,14 +306,12 @@ function LeadDetailView() {
                 value={lead.mallPreference.join(', ') || '—'}
               />
               <InfoRow label="Lead Score" value={String(lead.leadScore)} />
-              {lead.createdAt?.toDate && (
-                <InfoRow
-                  label="Created"
-                  value={dayjs(lead.createdAt.toDate()).format(
-                    'MMM D, YYYY HH:mm',
-                  )}
-                />
-              )}
+              <InfoRow
+                label="Created"
+                value={dayjs(lead.createdAt.toDate()).format(
+                  'MMM D, YYYY HH:mm',
+                )}
+              />
             </dl>
           </div>
 

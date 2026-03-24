@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 
-
 const MALLS = [
   'Central World',
   'Central Ladprao',

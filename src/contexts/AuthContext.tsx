@@ -1,19 +1,8 @@
-import {
-  
-  createContext,
-  useContext,
-  useEffect,
-  useState
-} from 'react'
-import {
-  
-  onAuthStateChanged,
-  signInWithPopup,
-  signOut
-} from 'firebase/auth'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth'
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
-import type {ReactNode} from 'react';
-import type {User} from 'firebase/auth';
+import type { ReactNode } from 'react'
+import type { User } from 'firebase/auth'
 import type { UserProfile, UserRole } from '@/types'
 import { CPN_DOMAIN, auth, db, googleProvider } from '@/lib/firebase'
 

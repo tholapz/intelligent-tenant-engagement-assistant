@@ -32,9 +32,7 @@ interface LeadCardProps {
 export function LeadCard({ lead }: LeadCardProps) {
   const navigate = useNavigate()
   const isHighPriority = lead.leadScore >= 75
-  const createdAt = lead.createdAt?.toDate
-    ? dayjs(lead.createdAt.toDate()).fromNow()
-    : ''
+  const createdAt = dayjs(lead.createdAt.toDate()).fromNow()
 
   return (
     <button

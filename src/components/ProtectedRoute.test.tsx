@@ -1,6 +1,7 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { ProtectedRoute } from './ProtectedRoute'
+import type { Timestamp } from 'firebase/firestore'
 import type { UserProfile } from '@/types'
 import type { User } from 'firebase/auth'
 
@@ -25,7 +26,7 @@ const fakeProfile: UserProfile = {
   email: 'agent@centralpattana.co.th',
   displayName: 'Agent One',
   role: 'agent',
-  createdAt: null as unknown as import('firebase/firestore').Timestamp,
+  createdAt: null as unknown as Timestamp,
 }
 
 describe('ProtectedRoute', () => {

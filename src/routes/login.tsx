@@ -4,7 +4,6 @@ import type { RootRoute } from '@tanstack/react-router'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 
-
 function LoginPage() {
   const { user, signInWithGoogle, loading, authError } = useAuth()
   const navigate = useNavigate()
