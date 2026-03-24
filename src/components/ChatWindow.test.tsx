@@ -14,7 +14,7 @@ vi.mock('../lib/firebase', () => ({
 }))
 
 vi.mock('firebase/auth', () => ({
-  onAuthStateChanged: vi.fn((auth, cb) => {
+  onAuthStateChanged: vi.fn((_auth, cb) => {
     // Immediately call callback with a fake user → sets authReady=true
     cb({ uid: 'test-uid', getIdToken: () => Promise.resolve('fake-token') })
     return () => {}
@@ -88,9 +88,7 @@ describe('ChatWindow — US-001', () => {
     await act(async () => {
       render(<ChatWindow />)
     })
-    const btn = screen.getByRole('button', {
-      name: /send/i,
-    })
+    const btn = screen.getByRole('button', { name: /send/i }) as HTMLButtonElement
     expect(btn.disabled).toBe(true)
   })
 
@@ -102,9 +100,7 @@ describe('ChatWindow — US-001', () => {
     await act(async () => {
       fireEvent.change(textarea, { target: { value: 'Hello' } })
     })
-    const btn = screen.getByRole('button', {
-      name: /send/i,
-    })
+    const btn = screen.getByRole('button', { name: /send/i }) as HTMLButtonElement
     expect(btn.disabled).toBe(false)
   })
 
@@ -150,16 +146,9 @@ describe('ChatWindow — US-005 lead capture', () => {
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: /contact me/i }))
     })
-    expect(
-      (screen.getByPlaceholderText(/full name/i)).required,
-    ).toBe(true)
-    expect(
-      (screen.getByPlaceholderText(/phone number/i))
-        .required,
-    ).toBe(true)
-    expect(
-      (screen.getByPlaceholderText(/email/i)).required,
-    ).toBe(false)
+    expect((screen.getByPlaceholderText(/full name/i) as HTMLInputElement).required).toBe(true)
+    expect((screen.getByPlaceholderText(/phone number/i) as HTMLInputElement).required).toBe(true)
+    expect((screen.getByPlaceholderText(/email/i) as HTMLInputElement).required).toBe(false)
   })
 
   test('Cancel button closes lead form', async () => {
@@ -202,7 +191,7 @@ describe('ChatWindow — streaming indicator', () => {
   test('3-dot bounce shown when isStreaming=true and last message is empty', async () => {
     await renderWithMessages([
       msg('user', 'hi'),
-      msg('assistant', '', 'streaming-msg'),
+      msg('assistant', '', '00000000-0000-0000-0000-000000000001'),
     ])
     await act(async () => {
       useChatStore.getState().setStreaming(true)
@@ -219,9 +208,7 @@ describe('ChatWindow — streaming indicator', () => {
     await act(async () => {
       useChatStore.getState().setStreaming(true)
     })
-    const textarea = screen.getByPlaceholderText(
-      /type a message/i,
-    )
+    const textarea = screen.getByPlaceholderText(/type a message/i) as HTMLTextAreaElement
     expect(textarea.disabled).toBe(true)
   })
 })
