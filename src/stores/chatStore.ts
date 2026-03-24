@@ -36,8 +36,8 @@ export const useChatStore = create<ChatState>()(
       updateLastMessage: (content) =>
         set((state) => {
           const messages = [...state.messages]
-          const last = messages[messages.length - 1]
-          if (last && last.role === 'assistant') {
+          const last = messages.at(-1)
+          if (last?.role === 'assistant') {
             messages[messages.length - 1] = { ...last, content }
           }
           return { messages }

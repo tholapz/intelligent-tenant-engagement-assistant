@@ -89,7 +89,6 @@ export default function ChatWindow() {
     }
 
     initSession()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authReady])
 
   // Auto-scroll to bottom on new messages
