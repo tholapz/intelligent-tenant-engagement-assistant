@@ -88,8 +88,7 @@ describe('ChatWindow — US-001', () => {
     await act(async () => {
       render(<ChatWindow />)
     })
-    const btn = screen.getByRole('button', { name: /send/i }) as HTMLButtonElement
-    expect(btn.disabled).toBe(true)
+    expect(screen.getByRole('button', { name: /send/i }).hasAttribute('disabled')).toBe(true)
   })
 
   test('Send button enabled when input has text', async () => {
@@ -100,8 +99,7 @@ describe('ChatWindow — US-001', () => {
     await act(async () => {
       fireEvent.change(textarea, { target: { value: 'Hello' } })
     })
-    const btn = screen.getByRole('button', { name: /send/i }) as HTMLButtonElement
-    expect(btn.disabled).toBe(false)
+    expect(screen.getByRole('button', { name: /send/i }).hasAttribute('disabled')).toBe(false)
   })
 
   test('shows empty-state welcome prompt when no messages', async () => {
@@ -146,9 +144,9 @@ describe('ChatWindow — US-005 lead capture', () => {
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: /contact me/i }))
     })
-    expect((screen.getByPlaceholderText(/full name/i) as HTMLInputElement).required).toBe(true)
-    expect((screen.getByPlaceholderText(/phone number/i) as HTMLInputElement).required).toBe(true)
-    expect((screen.getByPlaceholderText(/email/i) as HTMLInputElement).required).toBe(false)
+    expect(screen.getByPlaceholderText(/full name/i).hasAttribute('required')).toBe(true)
+    expect(screen.getByPlaceholderText(/phone number/i).hasAttribute('required')).toBe(true)
+    expect(screen.getByPlaceholderText(/email/i).hasAttribute('required')).toBe(false)
   })
 
   test('Cancel button closes lead form', async () => {
@@ -208,7 +206,6 @@ describe('ChatWindow — streaming indicator', () => {
     await act(async () => {
       useChatStore.getState().setStreaming(true)
     })
-    const textarea = screen.getByPlaceholderText(/type a message/i) as HTMLTextAreaElement
-    expect(textarea.disabled).toBe(true)
+    expect(screen.getByPlaceholderText(/type a message/i).hasAttribute('disabled')).toBe(true)
   })
 })
