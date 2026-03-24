@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 **Intelligent Tenant Engagement & Assistant** — a pilot system for CPN (Central Pattana) enabling:
+
 - **Component A**: Customer-facing AI chatbot (24/7 inbound lead capture)
 - **Component B**: Internal AI assistant for call centre / leasing staff (unit recommendations, lead scoring)
 - **Admin Panel**: Knowledge base management, unit availability
@@ -22,6 +23,7 @@ npm run check        # Prettier write + ESLint fix (formats and lints)
 ```
 
 To run a single test file:
+
 ```bash
 npx vitest run src/path/to/file.test.tsx
 ```
@@ -49,6 +51,7 @@ Files and directories prefixed with `demo` (e.g., `demo.form.simple.tsx`, `demo.
 Per `design-document.md`: Python 3.12 + FastAPI + LangChain 0.3, deployed on Cloud Run.
 
 Key API endpoints:
+
 - `POST /api/v1/chat/{sessionId}/message` — RAG chat (SSE streaming response)
 - `POST /api/v1/recommend` — merchant profile → unit recommendations
 

@@ -8,23 +8,32 @@ import {
   createRouter,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+import { AuthProvider } from './contexts/AuthContext'
+
 import FormSimpleDemo from './routes/demo.form.simple.tsx'
 import FormAddressDemo from './routes/demo.form.address.tsx'
+import LoginRoute from './routes/login.tsx'
+import AgentRoute from './routes/agent/index.tsx'
+import LeadDetailRoute from './routes/agent/lead-detail.tsx'
+import RecommendRoute from './routes/agent/recommend.tsx'
 
-import Header from './components/Header'
+import App from './App.tsx'
 
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 
-import App from './App.tsx'
+const queryClient = new QueryClient()
 
 const rootRoute = createRootRoute({
   component: () => (
-    <>
-      <Header />
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Outlet />
+        <TanStackRouterDevtools />
+      </AuthProvider>
+    </QueryClientProvider>
   ),
 })
 
@@ -38,6 +47,10 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   FormSimpleDemo(rootRoute),
   FormAddressDemo(rootRoute),
+  LoginRoute(rootRoute),
+  AgentRoute(rootRoute),
+  LeadDetailRoute(rootRoute),
+  RecommendRoute(rootRoute),
 ])
 
 const router = createRouter({
@@ -65,7 +78,4 @@ if (rootElement && !rootElement.innerHTML) {
   )
 }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()
