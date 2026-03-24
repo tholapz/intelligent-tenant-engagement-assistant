@@ -48,11 +48,11 @@ function LeadDetailView() {
   const navigate = useNavigate()
   const { user, userProfile, role } = useAuth()
 
-  const { lead, loading: leadLoading } = useLead(leadId)
+  const { lead, loading: leadLoading } = useLead(leadId ?? '')
   const { turns, loading: convoLoading } = useConversation(
     lead?.sessionId ?? '',
   )
-  const { logs } = useActivityLog(leadId)
+  const { logs } = useActivityLog(leadId ?? '')
 
   const [note, setNote] = useState('')
   const [savingNote, setSavingNote] = useState(false)
@@ -90,7 +90,7 @@ function LeadDetailView() {
     setChangingStatus(true)
     try {
       await updateLeadStatus(
-        leadId,
+        leadId ?? '',
         lead.status,
         newStatus as LeadStatus,
         user.uid,
@@ -106,7 +106,7 @@ function LeadDetailView() {
   const handleSaveNote = async () => {
     setSavingNote(true)
     try {
-      await addLeadNote(leadId, note)
+      await addLeadNote(leadId ?? '', note)
     } finally {
       setSavingNote(false)
     }
