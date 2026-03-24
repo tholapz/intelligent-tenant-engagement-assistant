@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, test } from 'vitest'
 import { useChatStore } from './chatStore'
 
 // Reset store state between tests
@@ -34,7 +34,12 @@ describe('chatStore', () => {
   })
 
   test('addMessage appends to messages array', () => {
-    const msg = { id: 'm1', role: 'user' as const, content: 'Hello', timestamp: Date.now() }
+    const msg = {
+      id: 'm1',
+      role: 'user' as const,
+      content: 'Hello',
+      timestamp: Date.now(),
+    }
     useChatStore.getState().addMessage(msg)
     expect(useChatStore.getState().messages).toHaveLength(1)
     expect(useChatStore.getState().messages[0]).toEqual(msg)
@@ -42,15 +47,34 @@ describe('chatStore', () => {
 
   test('addMessage appends multiple messages in order', () => {
     const m1 = { id: '1', role: 'user' as const, content: 'A', timestamp: 1 }
-    const m2 = { id: '2', role: 'assistant' as const, content: 'B', timestamp: 2 }
+    const m2 = {
+      id: '2',
+      role: 'assistant' as const,
+      content: 'B',
+      timestamp: 2,
+    }
     useChatStore.getState().addMessage(m1)
     useChatStore.getState().addMessage(m2)
     expect(useChatStore.getState().messages).toEqual([m1, m2])
   })
 
   test('updateLastMessage updates content of last assistant message', () => {
-    useChatStore.getState().addMessage({ id: '1', role: 'user' as const, content: 'Q', timestamp: 1 })
-    useChatStore.getState().addMessage({ id: '2', role: 'assistant' as const, content: '', timestamp: 2 })
+    useChatStore
+      .getState()
+      .addMessage({
+        id: '1',
+        role: 'user' as const,
+        content: 'Q',
+        timestamp: 1,
+      })
+    useChatStore
+      .getState()
+      .addMessage({
+        id: '2',
+        role: 'assistant' as const,
+        content: '',
+        timestamp: 2,
+      })
     useChatStore.getState().updateLastMessage('Full response')
     const last = useChatStore.getState().messages.at(-1)
     expect(last?.content).toBe('Full response')
@@ -75,7 +99,9 @@ describe('chatStore', () => {
       status: 'active',
       createdAt: 1,
       updatedAt: 2,
-      messages: [{ id: 'm1', role: 'user' as const, content: 'Hi', timestamp: 1 }],
+      messages: [
+        { id: 'm1', role: 'user' as const, content: 'Hi', timestamp: 1 },
+      ],
     })
     useChatStore.getState().setLeadCaptured(true)
     useChatStore.getState().clearSession()
@@ -88,17 +114,20 @@ describe('chatStore', () => {
 
   // US-006-X: only sessionId persisted (not messages)
   test('persist partialize stores only sessionId', () => {
-    const persistConfig = (useChatStore as unknown as { persist: { getOptions: () => { partialize: (s: ReturnType<typeof useChatStore.getState>) => unknown } } }).persist?.getOptions()
-    const partialize = persistConfig?.partialize
-    if (!partialize) {
-      // Verify via localStorage key name
-      expect(localStorage.getItem('cpn-chat-session')).not.toBeUndefined()
-      return
-    }
-    const state = useChatStore.getState()
-    const persisted = partialize(state) as Record<string, unknown>
-    expect(Object.keys(persisted)).toEqual(['sessionId'])
-    expect(persisted.messages).toBeUndefined()
+    // Trigger a write so the persist middleware flushes to localStorage
+    useChatStore.getState().setSession({
+      sessionId: 'persist-test',
+      status: 'active',
+      createdAt: 0,
+      updatedAt: 0,
+      messages: [{ id: 'm1', role: 'user' as const, content: 'hi', timestamp: 1 }],
+    })
+    const raw = localStorage.getItem('cpn-chat-session')
+    expect(raw).not.toBeNull()
+    const stored = JSON.parse(raw!) as { state: Record<string, unknown> }
+    // Only sessionId should be in persisted state, not messages
+    expect(stored.state.sessionId).toBe('persist-test')
+    expect(stored.state.messages).toBeUndefined()
   })
 
   test('localStorage key is cpn-chat-session', () => {
