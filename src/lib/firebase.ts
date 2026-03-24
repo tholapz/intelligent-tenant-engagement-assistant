@@ -1,5 +1,5 @@
-import { initializeApp, getApps } from 'firebase/app'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import { getApps, initializeApp } from 'firebase/app'
+import { GoogleAuthProvider, getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getMessaging, isSupported } from 'firebase/messaging'
 
@@ -12,7 +12,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+const app =
+  getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
 
 export const auth = getAuth(app)
 export const db = getFirestore(app)
@@ -29,4 +30,5 @@ export const getMessagingInstance = async () => {
 }
 
 export const CPN_DOMAIN = 'centralpattana.co.th'
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'

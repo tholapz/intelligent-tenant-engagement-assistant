@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import {
+  addDoc,
+  collection,
   doc,
   onSnapshot,
-  collection,
-  query,
   orderBy,
-  updateDoc,
-  addDoc,
+  query,
   serverTimestamp,
+  updateDoc,
 } from 'firebase/firestore'
+import type { ActivityLog, ConversationTurn, Lead, LeadStatus } from '@/types'
 import { db } from '@/lib/firebase'
-import type { Lead, ConversationTurn, ActivityLog, LeadStatus } from '@/types'
 
 export function useLead(leadId: string) {
   const [lead, setLead] = useState<Lead | null>(null)
@@ -33,7 +33,7 @@ export function useLead(leadId: string) {
 }
 
 export function useConversation(sessionId: string) {
-  const [turns, setTurns] = useState<ConversationTurn[]>([])
+  const [turns, setTurns] = useState<Array<ConversationTurn>>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -41,7 +41,9 @@ export function useConversation(sessionId: string) {
     const ref = collection(db, 'conversations', sessionId, 'turns')
     const q = query(ref, orderBy('timestamp', 'asc'))
     const unsubscribe = onSnapshot(q, (snap) => {
-      setTurns(snap.docs.map((d) => ({ id: d.id, ...d.data() }) as ConversationTurn))
+      setTurns(
+        snap.docs.map((d) => ({ id: d.id, ...d.data() }) as ConversationTurn),
+      )
       setLoading(false)
     })
     return unsubscribe
@@ -51,7 +53,7 @@ export function useConversation(sessionId: string) {
 }
 
 export function useActivityLog(leadId: string) {
-  const [logs, setLogs] = useState<ActivityLog[]>([])
+  const [logs, setLogs] = useState<Array<ActivityLog>>([])
 
   useEffect(() => {
     const ref = collection(db, 'leads', leadId, 'activity_log')

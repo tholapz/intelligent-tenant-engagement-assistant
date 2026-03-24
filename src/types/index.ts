@@ -23,14 +23,14 @@ export interface Lead {
   prospectName: string
   contact: string
   businessType: string
-  mallPreference: string[]
+  mallPreference: Array<string>
   leadScore: number
   status: LeadStatus
   createdAt: Timestamp
   updatedAt: Timestamp
   sessionId: string
   aiSummary?: string
-  interestedUnits?: string[]
+  interestedUnits?: Array<string>
   assignedTo?: string
   notes?: string
 }
@@ -88,7 +88,7 @@ export interface UnitRecommendation {
 }
 
 export interface RecommendationResponse {
-  recommendations: UnitRecommendation[]
+  recommendations: Array<UnitRecommendation>
   queryId: string
   generatedAt: string
 }

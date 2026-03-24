@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
-import { useNavigate, createRoute } from '@tanstack/react-router'
+import { createRoute, useNavigate } from '@tanstack/react-router'
+import type { RootRoute } from '@tanstack/react-router'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
+
 
 function LoginPage() {
   const { user, signInWithGoogle, loading, authError } = useAuth()
@@ -20,7 +22,9 @@ function LoginPage() {
           <div className="w-14 h-14 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
             C
           </div>
-          <h1 className="text-2xl font-semibold text-gray-900">CPN Internal Assistant</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            CPN Internal Assistant
+          </h1>
           <p className="text-sm text-gray-500 text-center">
             Sign in with your CPN Google Workspace account to continue.
           </p>
@@ -42,7 +46,8 @@ function LoginPage() {
         </Button>
 
         <p className="text-xs text-gray-400 text-center">
-          Access is restricted to <strong>@centralpattana.co.th</strong> accounts only.
+          Access is restricted to <strong>@centralpattana.co.th</strong>{' '}
+          accounts only.
         </p>
       </div>
     </div>
@@ -71,8 +76,6 @@ function GoogleIcon() {
     </svg>
   )
 }
-
-import type { RootRoute } from '@tanstack/react-router'
 
 export default (parentRoute: RootRoute) =>
   createRoute({

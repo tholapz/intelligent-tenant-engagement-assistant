@@ -1,19 +1,21 @@
 import {
+  
   createContext,
   useContext,
   useEffect,
-  useState,
-  type ReactNode,
+  useState
 } from 'react'
 import {
+  
   onAuthStateChanged,
   signInWithPopup,
-  signOut,
-  type User,
+  signOut
 } from 'firebase/auth'
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { auth, db, googleProvider, CPN_DOMAIN } from '@/lib/firebase'
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
+import type {ReactNode} from 'react';
+import type {User} from 'firebase/auth';
 import type { UserProfile, UserRole } from '@/types'
+import { CPN_DOMAIN, auth, db, googleProvider } from '@/lib/firebase'
 
 interface AuthContextValue {
   user: User | null
@@ -77,7 +79,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, userProfile, role, loading, signInWithGoogle, logout, authError }}
+      value={{
+        user,
+        userProfile,
+        role,
+        loading,
+        signInWithGoogle,
+        logout,
+        authError,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -90,7 +100,9 @@ async function loadOrCreateUserProfile(user: User): Promise<UserProfile> {
   if (snap.exists()) {
     return snap.data() as UserProfile
   }
-  const profile: Omit<UserProfile, 'createdAt'> & { createdAt: ReturnType<typeof serverTimestamp> } = {
+  const profile: Omit<UserProfile, 'createdAt'> & {
+    createdAt: ReturnType<typeof serverTimestamp>
+  } = {
     uid: user.uid,
     email: user.email ?? '',
     displayName: user.displayName ?? '',

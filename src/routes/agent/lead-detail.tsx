@@ -1,8 +1,16 @@
 import { useState } from 'react'
-import { useNavigate, useParams, createRoute } from '@tanstack/react-router'
+import { createRoute, useNavigate, useParams } from '@tanstack/react-router'
 import ReactMarkdown from 'react-markdown'
 import dayjs from 'dayjs'
-import { useLead, useConversation, useActivityLog, updateLeadStatus, addLeadNote } from '@/hooks/useLead'
+import type { LeadStatus } from '@/types'
+import type { RootRoute } from '@tanstack/react-router'
+import {
+  addLeadNote,
+  updateLeadStatus,
+  useActivityLog,
+  useConversation,
+  useLead,
+} from '@/hooks/useLead'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
@@ -15,9 +23,9 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import type { LeadStatus } from '@/types'
 
-const STATUS_TRANSITIONS: Record<LeadStatus, LeadStatus[]> = {
+
+const STATUS_TRANSITIONS: Record<LeadStatus, Array<LeadStatus>> = {
   new: ['contacted'],
   contacted: ['site_visit_scheduled', 'closed_lost'],
   site_visit_scheduled: ['proposal_sent', 'closed_lost'],
@@ -36,19 +44,23 @@ const STATUS_LABELS: Record<LeadStatus, string> = {
 }
 
 function LeadDetailView() {
-  const { leadId } = useParams({ strict: false }) as { leadId: string }
+  const { leadId } = useParams({ strict: false })
   const navigate = useNavigate()
   const { user, userProfile, role } = useAuth()
 
   const { lead, loading: leadLoading } = useLead(leadId)
-  const { turns, loading: convoLoading } = useConversation(lead?.sessionId ?? '')
+  const { turns, loading: convoLoading } = useConversation(
+    lead?.sessionId ?? '',
+  )
   const { logs } = useActivityLog(leadId)
 
   const [note, setNote] = useState('')
   const [savingNote, setSavingNote] = useState(false)
   const [statusNote, setStatusNote] = useState('')
   const [changingStatus, setChangingStatus] = useState(false)
-  const [activeTab, setActiveTab] = useState<'transcript' | 'activity'>('transcript')
+  const [activeTab, setActiveTab] = useState<'transcript' | 'activity'>(
+    'transcript',
+  )
 
   if (leadLoading) {
     return (
@@ -175,7 +187,9 @@ function LeadDetailView() {
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
                   </div>
                 ) : turns.length === 0 ? (
-                  <p className="text-sm text-gray-400 text-center py-8">No transcript available.</p>
+                  <p className="text-sm text-gray-400 text-center py-8">
+                    No transcript available.
+                  </p>
                 ) : (
                   <div className="space-y-4">
                     {turns.map((turn) => (
@@ -183,7 +197,9 @@ function LeadDetailView() {
                         key={turn.id}
                         className={cn(
                           'flex',
-                          turn.role === 'user' ? 'justify-end' : 'justify-start',
+                          turn.role === 'user'
+                            ? 'justify-end'
+                            : 'justify-start',
                         )}
                       >
                         <div
@@ -199,7 +215,9 @@ function LeadDetailView() {
                             <p
                               className={cn(
                                 'text-xs mt-1',
-                                turn.role === 'user' ? 'text-blue-200' : 'text-gray-400',
+                                turn.role === 'user'
+                                  ? 'text-blue-200'
+                                  : 'text-gray-400',
                               )}
                             >
                               {dayjs(turn.timestamp.toDate()).format('HH:mm')}
@@ -213,23 +231,35 @@ function LeadDetailView() {
               ) : (
                 <div className="space-y-3">
                   {logs.length === 0 ? (
-                    <p className="text-sm text-gray-400 text-center py-8">No activity yet.</p>
+                    <p className="text-sm text-gray-400 text-center py-8">
+                      No activity yet.
+                    </p>
                   ) : (
                     logs.map((log) => (
                       <div key={log.id} className="flex gap-3 text-sm">
                         <div className="w-2 h-2 rounded-full bg-blue-400 mt-1.5 shrink-0" />
                         <div>
                           <p className="text-gray-700">
-                            <span className="font-medium">{log.agentName}</span> changed status from{' '}
-                            <span className="font-medium">{STATUS_LABELS[log.fromStatus]}</span> to{' '}
-                            <span className="font-medium">{STATUS_LABELS[log.toStatus]}</span>
+                            <span className="font-medium">{log.agentName}</span>{' '}
+                            changed status from{' '}
+                            <span className="font-medium">
+                              {STATUS_LABELS[log.fromStatus]}
+                            </span>{' '}
+                            to{' '}
+                            <span className="font-medium">
+                              {STATUS_LABELS[log.toStatus]}
+                            </span>
                           </p>
                           {log.note && (
-                            <p className="text-gray-500 mt-0.5 italic">"{log.note}"</p>
+                            <p className="text-gray-500 mt-0.5 italic">
+                              "{log.note}"
+                            </p>
                           )}
                           {log.timestamp?.toDate && (
                             <p className="text-gray-400 text-xs mt-0.5">
-                              {dayjs(log.timestamp.toDate()).format('MMM D, YYYY HH:mm')}
+                              {dayjs(log.timestamp.toDate()).format(
+                                'MMM D, YYYY HH:mm',
+                              )}
                             </p>
                           )}
                         </div>
@@ -244,7 +274,10 @@ function LeadDetailView() {
           {/* Private note */}
           <div className="bg-white rounded-xl border p-4">
             <label className="text-sm font-medium text-gray-700 block mb-2">
-              Private Note <span className="text-gray-400 font-normal">(not visible to prospect)</span>
+              Private Note{' '}
+              <span className="text-gray-400 font-normal">
+                (not visible to prospect)
+              </span>
             </label>
             <Textarea
               value={note || lead.notes || ''}
@@ -254,7 +287,11 @@ function LeadDetailView() {
               className="text-sm"
             />
             <div className="flex justify-end mt-2">
-              <Button size="sm" onClick={() => void handleSaveNote()} disabled={savingNote}>
+              <Button
+                size="sm"
+                onClick={() => void handleSaveNote()}
+                disabled={savingNote}
+              >
                 {savingNote ? 'Saving…' : 'Save Note'}
               </Button>
             </div>
@@ -277,7 +314,9 @@ function LeadDetailView() {
               {lead.createdAt?.toDate && (
                 <InfoRow
                   label="Created"
-                  value={dayjs(lead.createdAt.toDate()).format('MMM D, YYYY HH:mm')}
+                  value={dayjs(lead.createdAt.toDate()).format(
+                    'MMM D, YYYY HH:mm',
+                  )}
                 />
               )}
             </dl>
@@ -293,7 +332,10 @@ function LeadDetailView() {
 
             {canChangeStatus && availableTransitions.length > 0 ? (
               <div className="space-y-3">
-                <Select onValueChange={(v) => void handleStatusChange(v)} disabled={changingStatus}>
+                <Select
+                  onValueChange={(v) => void handleStatusChange(v)}
+                  disabled={changingStatus}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Change status…" />
                   </SelectTrigger>
@@ -317,7 +359,7 @@ function LeadDetailView() {
               <p className="text-sm text-gray-400">
                 {lead.status === 'closed_won' || lead.status === 'closed_lost'
                   ? 'Closed leads cannot be re-opened without admin override.'
-                  : 'You do not have permission to change this lead\'s status.'}
+                  : "You do not have permission to change this lead's status."}
               </p>
             )}
           </div>
@@ -343,8 +385,6 @@ function InfoRow({ label, value }: { label: string; value: string }) {
     </div>
   )
 }
-
-import type { RootRoute } from '@tanstack/react-router'
 
 export default (parentRoute: RootRoute) =>
   createRoute({

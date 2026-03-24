@@ -1,14 +1,17 @@
 import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { useAuth } from '@/contexts/AuthContext'
 import type { UserRole } from '@/types'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
-  requiredRole?: UserRole[]
+  requiredRole?: Array<UserRole>
 }
 
-export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+export function ProtectedRoute({
+  children,
+  requiredRole,
+}: ProtectedRouteProps) {
   const { user, role, loading } = useAuth()
   const navigate = useNavigate()
 

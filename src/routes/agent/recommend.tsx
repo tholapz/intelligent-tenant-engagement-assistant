@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { useNavigate, createRoute } from '@tanstack/react-router'
+import { createRoute, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import dayjs from 'dayjs'
+import type { RecommendationResponse, UnitRecommendation } from '@/types'
+import type { RootRoute } from '@tanstack/react-router'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,10 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { API_BASE_URL } from '@/lib/firebase'
-import { auth } from '@/lib/firebase'
-import type { RecommendationResponse, UnitRecommendation } from '@/types'
+import { API_BASE_URL, auth  } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
+
 
 const BUSINESS_TYPES = [
   'Food & Beverage',
@@ -90,7 +91,11 @@ function RecommendationPage() {
         const data = (await res.json()) as RecommendationResponse
         setResults(data)
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch recommendations')
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Failed to fetch recommendations',
+        )
       } finally {
         setLoading(false)
       }
@@ -119,7 +124,9 @@ function RecommendationPage() {
           ← Back to Pipeline
         </button>
         <span className="text-gray-300">|</span>
-        <span className="font-semibold text-gray-900">Unit Recommendations</span>
+        <span className="font-semibold text-gray-900">
+          Unit Recommendations
+        </span>
       </header>
 
       <div className="max-w-4xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -153,7 +160,9 @@ function RecommendationPage() {
                     </SelectContent>
                   </Select>
                   {field.state.meta.errors.length > 0 && (
-                    <p className="text-xs text-red-500 mt-1">{String(field.state.meta.errors[0])}</p>
+                    <p className="text-xs text-red-500 mt-1">
+                      {String(field.state.meta.errors[0])}
+                    </p>
                   )}
                 </div>
               )}
@@ -193,7 +202,9 @@ function RecommendationPage() {
                       min={1}
                       className="mt-1"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
                     />
                   </div>
                 )}
@@ -207,7 +218,9 @@ function RecommendationPage() {
                       min={1}
                       className="mt-1"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
                     />
                   </div>
                 )}
@@ -274,7 +287,9 @@ function RecommendationPage() {
             <div className="bg-white rounded-xl border border-dashed p-10 text-center text-gray-400">
               <p className="text-lg mb-1">🏢</p>
               <p className="text-sm">Fill in the merchant profile and click</p>
-              <p className="text-sm font-medium text-gray-500">Get Recommendations</p>
+              <p className="text-sm font-medium text-gray-500">
+                Get Recommendations
+              </p>
             </div>
           )}
         </div>
@@ -296,11 +311,18 @@ function RecommendationCard({
   const totalMonthly = unit.baseRentThb + unit.serviceChargeThb
 
   return (
-    <div className={cn('bg-white rounded-xl border p-4', pinned && 'border-blue-400')}>
+    <div
+      className={cn(
+        'bg-white rounded-xl border p-4',
+        pinned && 'border-blue-400',
+      )}
+    >
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-mono font-semibold text-gray-900">{unit.unitCode}</span>
+            <span className="font-mono font-semibold text-gray-900">
+              {unit.unitCode}
+            </span>
             <span className="text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-600">
               {unit.status}
             </span>
@@ -339,7 +361,9 @@ function RecommendationCard({
 
       <div className="mt-2 flex items-center justify-between text-xs text-gray-400">
         <span>Available: {unit.earliestAvailableDate}</span>
-        <span className="text-blue-600 font-medium">Match {Math.round(rec.score * 100)}%</span>
+        <span className="text-blue-600 font-medium">
+          Match {Math.round(rec.score * 100)}%
+        </span>
       </div>
 
       {rec.reason && (
@@ -356,8 +380,6 @@ function RecommendationRoutePage() {
     </ProtectedRoute>
   )
 }
-
-import type { RootRoute } from '@tanstack/react-router'
 
 export default (parentRoute: RootRoute) =>
   createRoute({

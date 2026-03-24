@@ -1,35 +1,38 @@
 import { useEffect, useState } from 'react'
 import {
+  
+  
+  
   collection,
-  onSnapshot,
-  query,
-  orderBy,
-  where,
-  limit,
-  startAfter,
   getDocs,
-  type QueryConstraint,
-  type QueryDocumentSnapshot,
-  type DocumentData,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  startAfter,
+  where
 } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+import type {DocumentData, QueryConstraint, QueryDocumentSnapshot} from 'firebase/firestore';
 import type { Lead, LeadFilters } from '@/types'
+import { db } from '@/lib/firebase'
 
 const PAGE_SIZE = 20
 
 export function useLeads(filters: LeadFilters = {}) {
-  const [leads, setLeads] = useState<Lead[]>([])
+  const [leads, setLeads] = useState<Array<Lead>>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const ref = collection(db, 'leads')
-    const constraints: QueryConstraint[] = [orderBy('createdAt', 'desc')]
+    const constraints: Array<QueryConstraint> = [orderBy('createdAt', 'desc')]
 
     if (filters.status && filters.status !== 'all') {
       constraints.push(where('status', '==', filters.status))
     }
     if (filters.mallPreference) {
-      constraints.push(where('mallPreference', 'array-contains', filters.mallPreference))
+      constraints.push(
+        where('mallPreference', 'array-contains', filters.mallPreference),
+      )
     }
     if (filters.scoreMin !== undefined) {
       constraints.push(where('leadScore', '>=', filters.scoreMin))
@@ -60,9 +63,16 @@ export function useLeads(filters: LeadFilters = {}) {
 export async function fetchMoreLeads(
   lastDoc: QueryDocumentSnapshot<DocumentData>,
   filters: LeadFilters = {},
-): Promise<{ leads: Lead[]; lastDoc: QueryDocumentSnapshot<DocumentData> | null }> {
+): Promise<{
+  leads: Array<Lead>
+  lastDoc: QueryDocumentSnapshot<DocumentData> | null
+}> {
   const ref = collection(db, 'leads')
-  const constraints: QueryConstraint[] = [orderBy('createdAt', 'desc'), startAfter(lastDoc), limit(PAGE_SIZE)]
+  const constraints: Array<QueryConstraint> = [
+    orderBy('createdAt', 'desc'),
+    startAfter(lastDoc),
+    limit(PAGE_SIZE),
+  ]
 
   if (filters.status && filters.status !== 'all') {
     constraints.push(where('status', '==', filters.status))

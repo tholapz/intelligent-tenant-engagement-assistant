@@ -1,5 +1,7 @@
-import { useState, useRef, useCallback } from 'react'
-import { useNavigate, createRoute } from '@tanstack/react-router'
+import { useCallback, useRef, useState } from 'react'
+import { createRoute, useNavigate } from '@tanstack/react-router'
+import type { LeadFilters, LeadStatus } from '@/types'
+import type { RootRoute } from '@tanstack/react-router'
 import { useLeads } from '@/hooks/useLeads'
 import { LeadCard } from '@/components/LeadCard'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
@@ -13,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
-import type { LeadFilters, LeadStatus } from '@/types'
+
 
 const MALLS = [
   'Central World',
@@ -56,7 +58,9 @@ function AgentDashboard() {
           <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">
             C
           </div>
-          <span className="font-semibold text-gray-900">CPN Internal Assistant</span>
+          <span className="font-semibold text-gray-900">
+            CPN Internal Assistant
+          </span>
         </div>
         <div className="flex items-center gap-4">
           <Button
@@ -99,7 +103,9 @@ function AgentDashboard() {
                   <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="new">New</SelectItem>
                   <SelectItem value="contacted">Contacted</SelectItem>
-                  <SelectItem value="site_visit_scheduled">Site Visit Scheduled</SelectItem>
+                  <SelectItem value="site_visit_scheduled">
+                    Site Visit Scheduled
+                  </SelectItem>
                   <SelectItem value="proposal_sent">Proposal Sent</SelectItem>
                   <SelectItem value="closed_won">Closed Won</SelectItem>
                   <SelectItem value="closed_lost">Closed Lost</SelectItem>
@@ -107,11 +113,16 @@ function AgentDashboard() {
               </Select>
             </div>
             <div className="flex-1 min-w-40">
-              <label className="text-xs text-gray-500 mb-1 block">Mall Preference</label>
+              <label className="text-xs text-gray-500 mb-1 block">
+                Mall Preference
+              </label>
               <Select
                 value={filters.mallPreference ?? 'all'}
                 onValueChange={(v) =>
-                  setFilters((f) => ({ ...f, mallPreference: v === 'all' ? undefined : v }))
+                  setFilters((f) => ({
+                    ...f,
+                    mallPreference: v === 'all' ? undefined : v,
+                  }))
                 }
               >
                 <SelectTrigger>
@@ -149,11 +160,16 @@ function AgentDashboard() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
           </div>
         ) : leads.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">No leads found for the selected filters.</div>
+          <div className="text-center py-16 text-gray-400">
+            No leads found for the selected filters.
+          </div>
         ) : (
           <div className="space-y-3">
             {leads.map((lead, i) => (
-              <div key={lead.id} ref={i === leads.length - 1 ? lastLeadRef : null}>
+              <div
+                key={lead.id}
+                ref={i === leads.length - 1 ? lastLeadRef : null}
+              >
                 <LeadCard lead={lead} />
               </div>
             ))}
@@ -171,8 +187,6 @@ function AgentDashboardPage() {
     </ProtectedRoute>
   )
 }
-
-import type { RootRoute } from '@tanstack/react-router'
 
 export default (parentRoute: RootRoute) =>
   createRoute({

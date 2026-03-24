@@ -6,12 +6,18 @@ interface NotificationBannerProps {
   onDismiss: () => void
 }
 
-export function NotificationBanner({ notification, onDismiss }: NotificationBannerProps) {
+export function NotificationBanner({
+  notification,
+  onDismiss,
+}: NotificationBannerProps) {
   const navigate = useNavigate()
 
   const handleClick = () => {
     if (notification.leadId) {
-      void navigate({ to: '/agent/leads/$leadId', params: { leadId: notification.leadId } })
+      void navigate({
+        to: '/agent/leads/$leadId',
+        params: { leadId: notification.leadId },
+      })
     }
     onDismiss()
   }
@@ -21,7 +27,9 @@ export function NotificationBanner({ notification, onDismiss }: NotificationBann
       <div className="flex items-start gap-3">
         <span className="text-xl">⭐</span>
         <div className="flex-1">
-          <p className="font-semibold text-gray-900 text-sm">{notification.title}</p>
+          <p className="font-semibold text-gray-900 text-sm">
+            {notification.title}
+          </p>
           <p className="text-sm text-gray-600 mt-0.5">{notification.body}</p>
           {notification.leadId && (
             <button
